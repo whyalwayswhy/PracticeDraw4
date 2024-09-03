@@ -19,6 +19,10 @@ public class Practice02ClipPathView extends View {
     Point point1 = new Point(200, 200);
     Point point2 = new Point(600, 200);
 
+    Path path1 = new Path();
+
+    Path path2 = new Path();
+
     public Practice02ClipPathView(Context context) {
         super(context);
     }
@@ -33,13 +37,26 @@ public class Practice02ClipPathView extends View {
 
     {
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maps);
+
+        path1.addCircle(point1.x + 200, point1.y + 200, 150, Path.Direction.CW);
+
+        path2.setFillType(Path.FillType.INVERSE_WINDING);
+        path2.addCircle(point2.x + 200,  point2.y + 200, 150, Path.Direction.CW);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        canvas.save();
+        canvas.clipPath(path1);
         canvas.drawBitmap(bitmap, point1.x, point1.y, paint);
+        canvas.restore();
+
+        // 要进行save和restore 进行入栈和出栈操作 否则会继承上一次的修改
+        canvas.save();
+        canvas.clipPath(path2);
         canvas.drawBitmap(bitmap, point2.x, point2.y, paint);
+        canvas.restore();
     }
 }
